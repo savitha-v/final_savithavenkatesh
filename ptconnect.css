@@ -8,13 +8,9 @@ body {
     color: rgb(var(--bs-tertiary-color-rgb));
 }
 
-.no-spacing {
-    margin: 0;
-    padding: 0;
-}
 
 /* CUSTOMIZE THE CAROUSEL
--------------------------------------------------- */
+  -------------------------------------------------- */
 
 /* Carousel base class */
 .carousel {
@@ -36,24 +32,6 @@ body {
     width: 100%;
     height: 100%;
 }
-
-/* MARKETING CONTENT
--------------------------------------------------- */
-
-/* Center align the text within the three columns below the carousel */
-.marketing .col-lg-4 {
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-/* rtl:begin:ignore */
-.marketing .col-lg-4 p {
-    margin-right: .75rem;
-    margin-left: .75rem;
-}
-
-/* rtl:end:ignore */
-
 
 /* Featurettes
   ------------------------- */
@@ -99,8 +77,13 @@ body {
     font-weight: normal;
 }
 
+.no-spacing {
+    margin: 0;
+    padding: 0;
+}
+
 /* RESPONSIVE CSS
--------------------------------------------------- */
+  -------------------------------------------------- */
 
 @media (min-width: 40em) {
 
