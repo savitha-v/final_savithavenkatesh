@@ -82,6 +82,12 @@ body {
     padding: 0;
 }
 
+/*About.html list headers */
+.modality-list-header {
+    font-weight: bold;
+    font-size: 30%;
+}
+
 /* RESPONSIVE CSS
   -------------------------------------------------- */
 
