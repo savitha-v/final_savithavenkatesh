@@ -154,6 +154,12 @@ body {
     scroll-margin-top: 130px;
 }
 
+.pitch-black {
+    font-style: italic;
+    font-weight: bold;
+    text-align: center;
+}
+
 .pitch {
     font-style: italic;
     font-weight: bold;
