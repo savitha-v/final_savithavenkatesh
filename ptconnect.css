@@ -8,6 +8,24 @@ body {
     color: rgb(var(--bs-tertiary-color-rgb));
 }
 
+/*nav bar text size*/
+.textsize {
+    font-size: 140%;
+}
+
+.margins {
+    margin-top: 8rem;
+    margin-left: 6rem;
+    margin-right: 6rem;
+}
+
+.increase-spacing {
+    padding-top: 2rem;
+}
+
+.footspace {
+    padding-top: 4rem;
+}
 
 /* CUSTOMIZE THE CAROUSEL
   -------------------------------------------------- */
@@ -94,9 +112,12 @@ body {
 }
 
 .sub-header {
-    font-weight: bold;
     font-size: 130%;
     font-style: italic;
+}
+
+.textcolor {
+    color: darkorchid;
 }
 
 /* RESPONSIVE CSS
