@@ -140,6 +140,17 @@ body {
     height: 70%;
 }
 
+.logosmall {
+    width: 7.5%; 
+    height: 7.5%
+}
+
+#about-header-niche,
+#about-header-modality,
+#about-header-style {
+    scroll-margin-top: 130px;
+}
+
 /* RESPONSIVE CSS
   -------------------------------------------------- */
 
