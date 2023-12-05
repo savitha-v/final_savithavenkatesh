@@ -65,7 +65,7 @@
         <p class="bold textcolor">Required information is marked with an asterisk (*).</p>
 
         <!-- Add the id "reservationForm" for easy reference in the script -->
-        <form id="reservationForm" method="post" action="https://webdevbasics.net/scripts/pacific.php">
+        <form id="reservationForm" class="needs-validation" novalidate>
 
             <div class="progress">
                 <div id="formProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
@@ -89,7 +89,8 @@
             <!-- Email -->
             <div class="mb-3">
                 <label for="emailField" class="form-label textcolor">* E-mail:</label>
-                <input type="email" class="form-control" id="emailField" name="emailField" required>
+                <input type="email" class="form-control" id="emailField" name="emailField" required
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                 <div class="invalid-feedback">Please enter a valid email address.</div>
             </div>
 
@@ -97,6 +98,7 @@
             <div class="mb-3">
                 <label for="ageField" class="form-label textcolor">* Age: (Must be 7 or older)</label>
                 <input type="number" class="form-control" id="ageField" name="ageField" required min="7">
+                <div class="invalid-feedback">Please enter a valid age.</div>
             </div>
 
             <!-- Pregnancy -->
@@ -173,7 +175,7 @@
 
             <!-- Military or Student Status -->
             <div class="mb-3">
-                <label for="StatusField" class="form-label textcolor">* Are you an active military member, a veteran, or
+                <label for="StatusField" class="form-label textcolor">Are you an active military member, a veteran, or
                     a university student?</label>
                 <select id="StatusField" name="StatusField" onchange="showStatusTextarea()">
                     <option value="activeMilitary">Active Military</option>
@@ -213,12 +215,15 @@
                     <option value="12">12 Sessions</option>
                     <option value="24">24 Sessions</option>
                 </select>
+            </div>
 
-                <!-- Hidden inputs for detailed cost breakdown -->
-                <input type="hidden" id="sessionPrice" name="sessionPrice">
-                <input type="hidden" id="monthlyFee" name="monthlyFee">
-                <input type="hidden" id="joinerFee" name="joinerFee">
-                <input type="hidden" id="totalPrice" name="totalPrice">
+            <div class="price-display">
+                <p>Session Price: <span id="displaySessionPrice">$0.00</span></p>
+                <p id="monthlyFeeContainer" style="display: none;">Monthly Fee: <span
+                        id="displayMonthlyFee">$0.00</span></p>
+                <p id="joinerFeeContainer" style="display: none;">Joiner Fee: <span id="displayJoinerFee">$0.00</span>
+                </p>
+                <p>Total Price: <span id="displayTotalPrice">$0.00</span></p>
             </div>
 
             <!-- Submit Button -->
@@ -227,36 +232,6 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', updateProgressBar);
-            // Add a click event listener to the submit button
-            document.getElementById('submitBtn').addEventListener('click', function (event) {
-                // Remove the "was-validated" class to reset validation state
-                document.getElementById('reservationForm').classList.remove('was-validated');
-
-                // Check if any of the special questions are answered with 'Yes'
-                const pregnancyAnswer = document.getElementById('pregnancyField').value;
-                const disabilitiesAnswer = document.getElementById('disabilitiesField').value;
-                const injuriesAnswer = document.getElementById('injuriesField').value;
-                const athleteAnswer = document.getElementById('athleteField').value;
-
-                // Validate corresponding textarea fields
-                validateTextarea('lastPregnancy', 'Please provide information about your last pregnancy.', pregnancyAnswer);
-                validateTextarea('disabilitiesDescription', 'Please describe your disabilities/disorders.', disabilitiesAnswer);
-                validateTextarea('injuriesDescription', 'Please describe your injuries.', injuriesAnswer);
-                validateTextarea('athleteDescription', 'Please provide information about your sport.', athleteAnswer);
-
-                // Validate StatusDescription field
-                validateStatusDescription(answer);
-
-                // Add the "was-validated" class to apply Bootstrap validation styles
-                document.getElementById('reservationForm').classList.add('was-validated');
-
-                // Prevent form submission if it is not valid
-                if (!document.getElementById('reservationForm').checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-            });
-
             // Populate default values from an array
             const defaultValues = {
                 fname: 'John',
@@ -275,50 +250,6 @@
 
             // Call the function to set default values
             setDefaultValues();
-
-            // Function to show/hide textarea based on the selected value
-            function showTextarea(fieldId, textareaId) {
-                var answer = document.getElementById(fieldId).value;
-                var textareaDiv = document.getElementById(textareaId);
-
-                // Set display style based on the selected answer
-                textareaDiv.style.display = answer === 'yes' ? 'block' : 'none';
-            }
-
-            // Function to show/hide textarea for special questions
-            function showSecondQuestion() {
-                var answer = document.getElementById('pregnancyField').value;
-                var secondQuestionDiv = document.getElementById('secondQuestion');
-                var lastPregnancySelect = document.getElementById('lastPregnancy');
-
-                if (answer == 'yes') {
-                    secondQuestionDiv.style.display = 'block';
-                    lastPregnancySelect.disabled = false;
-                } else {
-                    secondQuestionDiv.style.display = 'none';
-                    lastPregnancySelect.disabled = true;
-                }
-
-                // Show/hide textarea for Disabilities/Disorders based on the selected value
-                showTextarea('disabilitiesField', 'disabilitiesFieldTextarea');
-                // Show/hide textarea for Injuries based on the selected value
-                showTextarea('injuriesField', 'injuriesFieldTextarea');
-                // Show/hide textarea for Athlete based on the selected value
-                showTextarea('athleteField', 'athleteFieldTextarea');
-                showStatusTextarea();
-            }
-
-            // Validate textarea content for special questions
-            function validateTextarea(textareaId, errorMessage, answer) {
-                if (answer === 'yes') {
-                    var textarea = document.getElementById(textareaId);
-                    if (textarea.value.trim() === '') {
-                        textarea.setCustomValidity(errorMessage);
-                    } else {
-                        textarea.setCustomValidity('');
-                    }
-                }
-            }
 
             function updateProgressBar() {
                 // Select all input, select, and textarea elements
@@ -349,53 +280,6 @@
             // Initial call to set the progress bar correctly
             updateProgressBar();
 
-            // Validate StatusDescription field
-            function validateStatusDescription(answer) {
-                var statusDescription = document.getElementById('StatusDescription');
-
-                // Reset any previous validation
-                statusDescription.setCustomValidity('');
-
-                if (answer !== 'no') {
-                    // If the answer is not 'no', check for a valid ID
-                    if (statusDescription.value.trim() === '') {
-                        statusDescription.setCustomValidity('Please enter a six-digit number.');
-                    }
-                }
-            }
-
-            // Function to show/hide textarea for Military or Student Status
-            function showStatusTextarea() {
-                var answer = document.getElementById('StatusField').value;
-                var textareaDiv = document.getElementById('StatusFieldTextarea');
-
-                // Set display style based on the selected answer
-                textareaDiv.style.display = answer !== 'no' ? 'block' : 'none';
-            }
-
-            // Ensure that the function is properly attached to the 'change' event for each field
-            document.getElementById('pregnancyField').addEventListener('change', function () {
-                showSecondQuestion();
-            });
-
-            document.getElementById('disabilitiesField').addEventListener('change', function () {
-                showTextarea('disabilitiesField', 'disabilitiesFieldTextarea');
-            });
-
-            document.getElementById('injuriesField').addEventListener('change', function () {
-                showTextarea('injuriesField', 'injuriesFieldTextarea');
-            });
-
-            document.getElementById('athleteField').addEventListener('change', function () {
-                showTextarea('athleteField', 'athleteFieldTextarea');
-            });
-
-            // Ensure that the function is properly attached to the 'change' event for StatusField
-            document.getElementById('StatusField').addEventListener('change', function () {
-                showStatusTextarea();
-                validateStatusDescription();
-            });
-
             function calculateTotal() {
                 // Pricing details from pricing.html
                 const businessPricing = {
@@ -424,20 +308,20 @@
                     monthlyFee = businessPricing.monthlyFee;
                     joinerFee = businessPricing.joinerFee;
                     total = sessionCost + monthlyFee + joinerFee;
-                    document.getElementById('monthlyFee').disabled = false;
-                    document.getElementById('joinerFee').disabled = false;
                 } else if (packageType === 'independent') {
                     sessionCost = independentPricing[sessionType][numSessionsIndex];
                     total = sessionCost;
-                    document.getElementById('monthlyFee').disabled = true;
-                    document.getElementById('joinerFee').disabled = true;
                 }
 
-                // Update the hidden input fields
-                document.getElementById('sessionPrice').value = sessionCost.toFixed(2);
-                document.getElementById('monthlyFee').value = monthlyFee.toFixed(2);
-                document.getElementById('joinerFee').value = joinerFee.toFixed(2);
-                document.getElementById('totalPrice').value = total.toFixed(2);
+                // Update the new display elements with the calculated prices
+                document.getElementById('displaySessionPrice').textContent = '$' + sessionCost.toFixed(2);
+                document.getElementById('displayMonthlyFee').textContent = '$' + monthlyFee.toFixed(2);
+                document.getElementById('displayJoinerFee').textContent = '$' + joinerFee.toFixed(2);
+                document.getElementById('displayTotalPrice').textContent = '$' + total.toFixed(2);
+
+                // Show or hide monthly and joiner fees based on package type
+                document.getElementById('monthlyFeeContainer').style.display = packageType === 'business' ? 'block' : 'none';
+                document.getElementById('joinerFeeContainer').style.display = packageType === 'business' ? 'block' : 'none';
             }
 
             // Call calculateTotal on page load to handle pre-filled or default values
@@ -447,6 +331,21 @@
             document.getElementById('packageType').addEventListener('change', calculateTotal);
             document.getElementById('sessionType').addEventListener('change', calculateTotal);
             document.getElementById('numSessions').addEventListener('change', calculateTotal);
+
+            // Select the form element
+            var form = document.getElementById('reservationForm');
+
+            // Add an event listener for the 'submit' event
+            form.addEventListener('submit', function (event) {
+                // Check if the form is valid
+                if (!form.checkValidity()) {
+                    event.preventDefault();  // Prevent the form from submitting
+                    event.stopPropagation(); // Stop the event from propagating further
+                }
+
+                // Add the 'was-validated' class to the form
+                form.classList.add('was-validated');
+            });
         </script>
 
         <!-- FOOTER -->
