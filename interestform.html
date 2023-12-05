@@ -60,11 +60,18 @@
         </nav>
     </header>
     <main class="margins">
-        <h2 class="pitch-black">Take the leap into a fitter future! Kickstart your fitness journey by filling out our interest form today!</h2>
+        <h2 class="pitch-black">Take the leap into a fitter future! Kickstart your fitness journey by filling out our
+            interest form today!</h2>
         <p class="bold textcolor">Required information is marked with an asterisk (*).</p>
 
         <!-- Add the id "reservationForm" for easy reference in the script -->
         <form id="reservationForm" method="post" action="https://webdevbasics.net/scripts/pacific.php">
+
+            <div class="progress">
+                <div id="formProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
+                    aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+
             <!-- First Name -->
             <div class="mb-3">
                 <label for="fnameField" class="form-label textcolor">* First Name:</label>
@@ -92,63 +99,367 @@
                 <input type="number" class="form-control" id="ageField" name="ageField" required min="7">
             </div>
 
-            <!-- Nights -->
+            <!-- Pregnancy -->
             <div class="mb-3">
-                <label for="nightsField" class="form-label textcolor">Nights:</label>
-                <input type="number" class="form-control" id="nightsField" name="nightsField" min="1" max="14">
+                <label for="pregnancyField" class="form-label textcolor">Have you ever been pregnant?</label>
+                <select id="pregnancyField" name="pregnancyField" onchange="showSecondQuestion()">
+                    <option value="yes">Yes</option>
+                    <option value="no" selected>No</option>
+                </select>
             </div>
 
-            <!-- Comments -->
+            <!-- Last Pregnancy -->
             <div class="mb-3">
-                <label for="commentsField" class="form-label textcolor">Comments:</label>
-                <textarea class="form-control" id="commentsField" name="commentsField" rows="2" cols="20"></textarea>
+                <div id="secondQuestion" style="display: none;">
+                    <label for="lastPregnancy" class="form-label textcolor">If yes, how long ago was your last
+                        pregnancy?</label>
+                    <select id="lastPregnancy" name="lastPregnancy" disabled>
+                        <option value="1-3 months">1-3 months</option>
+                        <option value="4-6 months">4-6 months</option>
+                        <option value="7-9 months">7-9 months</option>
+                        <option value="10-12 months">10-12 months</option>
+                        <option value=">12 months">>12 months</option>
+                        <option value="currently pregnant">Currently pregnant</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Disabilities/Disorders -->
+            <div class="mb-3">
+                <label for="disabilitiesField" class="form-label textcolor">Do you have any
+                    disabilities/disorders?</label>
+                <select id="disabilitiesField" name="disabilitiesField" onchange="showTextarea('disabilitiesField')">
+                    <option value="yes">Yes</option>
+                    <option value="no" selected>No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <div id="disabilitiesFieldTextarea" style="display: none;">
+                    <label for="disabilitiesDescription">If yes, describe:</label>
+                    <textarea id="disabilitiesDescription" name="disabilitiesDescription"
+                        class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Injuries -->
+            <div class="mb-3">
+                <label for="injuriesField" class="form-label textcolor">Do you have injuries?</label>
+                <select id="injuriesField" name="injuriesField" onchange="showTextarea('injuriesField')">
+                    <option value="yes">Yes</option>
+                    <option value="no" selected>No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <div id="injuriesFieldTextarea" style="display: none;">
+                    <label for="injuriesDescription">If yes, describe:</label>
+                    <textarea id="injuriesDescription" name="injuriesDescription" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Athlete -->
+            <div class="mb-3">
+                <label for="athleteField" class="form-label textcolor">Are you an athlete?</label>
+                <select id="athleteField" name="athleteField" onchange="showTextarea('athleteField')">
+                    <option value="yes">Yes</option>
+                    <option value="no" selected>No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <div id="athleteFieldTextarea" style="display: none;">
+                    <label for="athleteDescription">If yes, include sport:</label>
+                    <textarea id="athleteDescription" name="athleteDescription" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Military or Student Status -->
+            <div class="mb-3">
+                <label for="StatusField" class="form-label textcolor">* Are you an active military member, a veteran, or
+                    a university student?</label>
+                <select id="StatusField" name="StatusField" onchange="showStatusTextarea()">
+                    <option value="activeMilitary">Active Military</option>
+                    <option value="militaryVeteran">Military Veteran</option>
+                    <option value="universityStudent">University Student</option>
+                    <option value="no" selected>No</option>
+                </select>
+            </div>
+            <div class="mb-3" id="StatusFieldTextarea" style="display: none;">
+                <label for="StatusDescription">If yes, please provide your ID:</label>
+                <textarea id="StatusDescription" name="StatusDescription" class="form-control"></textarea>
+            </div>
+
+            <!-- Add a new section in the form for the pricing calculator -->
+            <div class="pricing-calculator">
+                <h3>Choose Your Training Package</h3>
+
+                <!-- Package Selection -->
+                <label for="packageType">Select Package Type:</label>
+                <select id="packageType" name="packageType" onchange="calculateTotal()">
+                    <option value="business">Business Affiliated</option>
+                    <option value="independent">Independent Professionals</option>
+                </select>
+
+                <!-- Session Type Selection -->
+                <label for="sessionType">Select Session Type:</label>
+                <select id="sessionType" name="sessionType" onchange="calculateTotal()">
+                    <option value="virtual">Virtual Sessions</option>
+                    <option value="faceToFace">Face-To-Face Sessions</option>
+                </select>
+
+                <!-- Number of Sessions Selection -->
+                <label for="numSessions">Select Number of Sessions:</label>
+                <select id="numSessions" name="numSessions" onchange="calculateTotal()">
+                    <option value="3">3 Sessions</option>
+                    <option value="6">6 Sessions</option>
+                    <option value="12">12 Sessions</option>
+                    <option value="24">24 Sessions</option>
+                </select>
+
+                <!-- Hidden inputs for detailed cost breakdown -->
+                <input type="hidden" id="sessionPrice" name="sessionPrice">
+                <input type="hidden" id="monthlyFee" name="monthlyFee">
+                <input type="hidden" id="joinerFee" name="joinerFee">
+                <input type="hidden" id="totalPrice" name="totalPrice">
             </div>
 
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
         </form>
 
-    <script>
-        // Add a click event listener to the submit button
-        document.getElementById('submitBtn').addEventListener('click', function () {
-            // Add the "was-validated" class to the form after the button is clicked
-            document.getElementById('reservationForm').classList.add('was-validated');
-        });
+        <script>
+            document.addEventListener('DOMContentLoaded', updateProgressBar);
+            // Add a click event listener to the submit button
+            document.getElementById('submitBtn').addEventListener('click', function (event) {
+                // Remove the "was-validated" class to reset validation state
+                document.getElementById('reservationForm').classList.remove('was-validated');
 
-        // Populate default values from an array
-        const defaultValues = {
-            fname: 'John',
-            lname: 'Doe',
-            email: 'john.doe@example.com',
-            age: 7,
-            nights: 3,
-            comments: 'Special requests or additional information.'
-        };
+                // Check if any of the special questions are answered with 'Yes'
+                const pregnancyAnswer = document.getElementById('pregnancyField').value;
+                const disabilitiesAnswer = document.getElementById('disabilitiesField').value;
+                const injuriesAnswer = document.getElementById('injuriesField').value;
+                const athleteAnswer = document.getElementById('athleteField').value;
 
-        // Function to set default values in form fields
-        function setDefaultValues() {
-            document.getElementById('fnameField').value = defaultValues.fname;
-            document.getElementById('lnameField').value = defaultValues.lname;
-            document.getElementById('emailField').value = defaultValues.email;
-            document.getElementById('ageField').value = defaultValues.age;
-            document.getElementById('nightsField').value = defaultValues.nights;
-            document.getElementById('commentsField').value = defaultValues.comments;
-        }
+                // Validate corresponding textarea fields
+                validateTextarea('lastPregnancy', 'Please provide information about your last pregnancy.', pregnancyAnswer);
+                validateTextarea('disabilitiesDescription', 'Please describe your disabilities/disorders.', disabilitiesAnswer);
+                validateTextarea('injuriesDescription', 'Please describe your injuries.', injuriesAnswer);
+                validateTextarea('athleteDescription', 'Please provide information about your sport.', athleteAnswer);
 
-        // Call the function to set default values
-        setDefaultValues();
-    </script>
-    <!-- FOOTER -->
-    <footer class="container footspace">
-        <p class="float-end"><a href="#">Back to top</a></p>
-        <p class="no-spacing">Copyright &copy; 2023 PTConnect</p>
-        <p class="no-spacing"><a href="mailto:savitha@venkatesh.com">savitha@venkatesh.com</a></p>
-        <div style="text-align: center">
-            <a href="index.html">
-                <img src="images/logo.png" alt="logo" class="logosmall">
-            </a>
-        </div>
-    </footer>
+                // Validate StatusDescription field
+                validateStatusDescription(answer);
+
+                // Add the "was-validated" class to apply Bootstrap validation styles
+                document.getElementById('reservationForm').classList.add('was-validated');
+
+                // Prevent form submission if it is not valid
+                if (!document.getElementById('reservationForm').checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+
+            // Populate default values from an array
+            const defaultValues = {
+                fname: 'John',
+                lname: 'Doe',
+                email: 'john.doe@example.com',
+                age: 7,
+            };
+
+            // Function to set default values in form fields
+            function setDefaultValues() {
+                document.getElementById('fnameField').value = defaultValues.fname;
+                document.getElementById('lnameField').value = defaultValues.lname;
+                document.getElementById('emailField').value = defaultValues.email;
+                document.getElementById('ageField').value = defaultValues.age;
+            }
+
+            // Call the function to set default values
+            setDefaultValues();
+
+            // Function to show/hide textarea based on the selected value
+            function showTextarea(fieldId, textareaId) {
+                var answer = document.getElementById(fieldId).value;
+                var textareaDiv = document.getElementById(textareaId);
+
+                // Set display style based on the selected answer
+                textareaDiv.style.display = answer === 'yes' ? 'block' : 'none';
+            }
+
+            // Function to show/hide textarea for special questions
+            function showSecondQuestion() {
+                var answer = document.getElementById('pregnancyField').value;
+                var secondQuestionDiv = document.getElementById('secondQuestion');
+                var lastPregnancySelect = document.getElementById('lastPregnancy');
+
+                if (answer == 'yes') {
+                    secondQuestionDiv.style.display = 'block';
+                    lastPregnancySelect.disabled = false;
+                } else {
+                    secondQuestionDiv.style.display = 'none';
+                    lastPregnancySelect.disabled = true;
+                }
+
+                // Show/hide textarea for Disabilities/Disorders based on the selected value
+                showTextarea('disabilitiesField', 'disabilitiesFieldTextarea');
+                // Show/hide textarea for Injuries based on the selected value
+                showTextarea('injuriesField', 'injuriesFieldTextarea');
+                // Show/hide textarea for Athlete based on the selected value
+                showTextarea('athleteField', 'athleteFieldTextarea');
+                showStatusTextarea();
+            }
+
+            // Validate textarea content for special questions
+            function validateTextarea(textareaId, errorMessage, answer) {
+                if (answer === 'yes') {
+                    var textarea = document.getElementById(textareaId);
+                    if (textarea.value.trim() === '') {
+                        textarea.setCustomValidity(errorMessage);
+                    } else {
+                        textarea.setCustomValidity('');
+                    }
+                }
+            }
+
+            function updateProgressBar() {
+                // Select all input, select, and textarea elements
+                const formElements = document.querySelectorAll('#reservationForm input, #reservationForm select, #reservationForm textarea');
+
+                // Filter out elements that are hidden or disabled
+                const visibleElements = Array.from(formElements).filter(el => !el.disabled && el.offsetParent !== null);
+
+                // Count the number of filled fields
+                const filledFields = visibleElements.filter(el => el.type !== 'checkbox' && el.type !== 'radio' && el.value || (el.type === 'checkbox' || el.type === 'radio') && el.checked).length;
+
+                // Calculate the progress percentage
+                const progressPercentage = (filledFields / visibleElements.length) * 100;
+
+                // Update the progress bar
+                const progressBar = document.getElementById('formProgress');
+                progressBar.style.width = progressPercentage + '%';
+                progressBar.setAttribute('aria-valuenow', progressPercentage);
+                progressBar.textContent = progressPercentage.toFixed(0) + '%';
+            }
+
+            // Attach the event listener to all input, select, and textarea elements
+            document.querySelectorAll('#reservationForm input, #reservationForm select, #reservationForm textarea').forEach(element => {
+                element.addEventListener('input', updateProgressBar);
+                element.addEventListener('change', updateProgressBar);
+            });
+
+            // Initial call to set the progress bar correctly
+            updateProgressBar();
+
+            // Validate StatusDescription field
+            function validateStatusDescription(answer) {
+                var statusDescription = document.getElementById('StatusDescription');
+
+                // Reset any previous validation
+                statusDescription.setCustomValidity('');
+
+                if (answer !== 'no') {
+                    // If the answer is not 'no', check for a valid ID
+                    if (statusDescription.value.trim() === '') {
+                        statusDescription.setCustomValidity('Please enter a six-digit number.');
+                    }
+                }
+            }
+
+            // Function to show/hide textarea for Military or Student Status
+            function showStatusTextarea() {
+                var answer = document.getElementById('StatusField').value;
+                var textareaDiv = document.getElementById('StatusFieldTextarea');
+
+                // Set display style based on the selected answer
+                textareaDiv.style.display = answer !== 'no' ? 'block' : 'none';
+            }
+
+            // Ensure that the function is properly attached to the 'change' event for each field
+            document.getElementById('pregnancyField').addEventListener('change', function () {
+                showSecondQuestion();
+            });
+
+            document.getElementById('disabilitiesField').addEventListener('change', function () {
+                showTextarea('disabilitiesField', 'disabilitiesFieldTextarea');
+            });
+
+            document.getElementById('injuriesField').addEventListener('change', function () {
+                showTextarea('injuriesField', 'injuriesFieldTextarea');
+            });
+
+            document.getElementById('athleteField').addEventListener('change', function () {
+                showTextarea('athleteField', 'athleteFieldTextarea');
+            });
+
+            // Ensure that the function is properly attached to the 'change' event for StatusField
+            document.getElementById('StatusField').addEventListener('change', function () {
+                showStatusTextarea();
+                validateStatusDescription();
+            });
+
+            function calculateTotal() {
+                // Pricing details from pricing.html
+                const businessPricing = {
+                    virtual: [145, 240, 420, 720],
+                    faceToFace: [180, 330, 600, 1080],
+                    monthlyFee: 35,
+                    joinerFee: 30
+                };
+                const independentPricing = {
+                    virtual: [105, 180, 300, 480],
+                    faceToFace: [120, 210, 360, 600]
+                };
+
+                // Get selected values
+                const packageType = document.getElementById('packageType').value;
+                const sessionType = document.getElementById('sessionType').value;
+                const numSessionsIndex = document.getElementById('numSessions').selectedIndex;
+
+                let sessionCost = 0;
+                let monthlyFee = 0;
+                let joinerFee = 0;
+                let total = 0;
+
+                if (packageType === 'business') {
+                    sessionCost = businessPricing[sessionType][numSessionsIndex];
+                    monthlyFee = businessPricing.monthlyFee;
+                    joinerFee = businessPricing.joinerFee;
+                    total = sessionCost + monthlyFee + joinerFee;
+                    document.getElementById('monthlyFee').disabled = false;
+                    document.getElementById('joinerFee').disabled = false;
+                } else if (packageType === 'independent') {
+                    sessionCost = independentPricing[sessionType][numSessionsIndex];
+                    total = sessionCost;
+                    document.getElementById('monthlyFee').disabled = true;
+                    document.getElementById('joinerFee').disabled = true;
+                }
+
+                // Update the hidden input fields
+                document.getElementById('sessionPrice').value = sessionCost.toFixed(2);
+                document.getElementById('monthlyFee').value = monthlyFee.toFixed(2);
+                document.getElementById('joinerFee').value = joinerFee.toFixed(2);
+                document.getElementById('totalPrice').value = total.toFixed(2);
+            }
+
+            // Call calculateTotal on page load to handle pre-filled or default values
+            window.onload = calculateTotal;
+
+            // Bind calculateTotal to change events of the dropdowns
+            document.getElementById('packageType').addEventListener('change', calculateTotal);
+            document.getElementById('sessionType').addEventListener('change', calculateTotal);
+            document.getElementById('numSessions').addEventListener('change', calculateTotal);
+        </script>
+
+        <!-- FOOTER -->
+        <footer class="container footspace">
+            <p class="float-end"><a href="#">Back to top</a></p>
+            <p class="no-spacing">Copyright &copy; 2023 PTConnect</p>
+            <p class="no-spacing"><a href="mailto:savitha@venkatesh.com">savitha@venkatesh.com</a></p>
+            <div style="text-align: center">
+                <a href="index.html">
+                    <img src="images/logo.png" alt="logo" class="logosmall">
+                </a>
+            </div>
+        </footer>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
